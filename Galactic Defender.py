@@ -177,7 +177,7 @@ medpack = pygame.image.load('health.png')
 boostUp = pygame.image.load('up.png')
 barrage = pygame.image.load('barrage.png')
 purpleLaser = pygame.image.load('purple.png')
-playerShip = pygame.image.load('ship2.png')
+playerShip = pygame.image.load('ship_new.png')
 bg = pygame.image.load('space.png') # .convert()
 
 
@@ -303,6 +303,7 @@ def gameLoop():
     specialBullet = 0
     shieldColour = white
     bg_y = 0
+    scroll_speed = 1
     
 
     gameExit = False
@@ -357,6 +358,8 @@ def gameLoop():
                         score = 0
                         SHOT_DELAY = 250
                         shieldColour = white
+                        bg_y = 0
+                        scroll_speed = 1
                         pygame.mixer.music.play(-1)
 
         while pause:
@@ -380,7 +383,7 @@ def gameLoop():
         if rel_bg_y < HEIGHT:
             gameDisplay.blit(bg, (0, rel_bg_y))
             
-        bg_y = bg_y + 1
+        bg_y = bg_y + scroll_speed
         if bg_y % HEIGHT == 0:
             bg_y = 0
         
@@ -397,14 +400,16 @@ def gameLoop():
         if len(enemies) <= 10 and spawn:
             spawnCount = spawnCount + 5
             spawn = False
-            
 
             if spawnCount >= 65:
                 SHOT_DELAY = max(100, SHOT_DELAY - 10)
+                scroll_speed = 4
             elif spawnCount >= 60:
                 SHOT_DELAY = 120
+                scroll_speed = 3
             elif spawnCount >= 50:
                 SHOT_DELAY = 150
+                scroll_speed = 2
             elif spawnCount >= 40:
                 SHOT_DELAY = 200
             elif spawnCount >= 35:
