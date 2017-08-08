@@ -178,6 +178,7 @@ boostUp = pygame.image.load('up.png')
 barrage = pygame.image.load('barrage.png')
 purpleLaser = pygame.image.load('purple.png')
 playerShip = pygame.image.load('ship2.png')
+bg = pygame.image.load('space.png') # .convert()
 
 
 #S Surface (Display of the game)
@@ -301,6 +302,7 @@ def gameLoop():
     turbo = False
     specialBullet = 0
     shieldColour = white
+    bg_y = 0
     
 
     gameExit = False
@@ -371,6 +373,17 @@ def gameLoop():
         # In game--------------------------
         keys = pygame.key.get_pressed()
         gameDisplay.fill(black)
+
+
+        rel_bg_y = bg_y % bg.get_rect().height
+        gameDisplay.blit(bg, (0, rel_bg_y - bg.get_rect().height))
+        if rel_bg_y < HEIGHT:
+            gameDisplay.blit(bg, (0, rel_bg_y))
+            
+        bg_y = bg_y + 1
+        if bg_y % HEIGHT == 0:
+            bg_y = 0
+        
         now = pygame.time.get_ticks()
 
         if hp > 0:
