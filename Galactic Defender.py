@@ -177,6 +177,7 @@ medpack = pygame.image.load('health.png')
 boostUp = pygame.image.load('up.png')
 barrage = pygame.image.load('barrage.png')
 purpleLaser = pygame.image.load('purple.png')
+playerShip = pygame.image.load('ship2.png')
 
 
 #S Surface (Display of the game)
@@ -373,8 +374,9 @@ def gameLoop():
         now = pygame.time.get_ticks()
 
         if hp > 0:
-            pygame.draw.rect(gameDisplay, blue, [ship_X, ship_Y, shipSize, shipSize])
-            pygame.draw.rect(gameDisplay, white, [ship_X + shipSize / 2 - bulletSize / 2, ship_Y - bulletSize, bulletSize, bulletSize])
+            #pygame.draw.rect(gameDisplay, blue, [ship_X, ship_Y, shipSize, shipSize])
+            #pygame.draw.rect(gameDisplay, white, [ship_X + shipSize / 2 - bulletSize / 2, ship_Y - bulletSize, bulletSize, bulletSize])
+            gameDisplay.blit(playerShip, (ship_X, ship_Y))
         else:
             gameOver = True
         
@@ -619,7 +621,7 @@ def gameLoop():
             shell.draw(gameDisplay)
 
         # HP bar
-        pygame.draw.rect(gameDisplay, black, [ship_X, ship_Y + shipSize - 5, shipSize, 8])
+        pygame.draw.rect(gameDisplay, black, [ship_X, ship_Y + shipSize, shipSize, 5])
         if hp > 0:
             if hp > 50:
                 colour = green
@@ -627,7 +629,7 @@ def gameLoop():
                 colour = orange
             else:
                 colour = red
-            pygame.draw.rect(gameDisplay, colour, [ship_X, ship_Y + shipSize - 5, shipSize * hp / 100, 8])
+            pygame.draw.rect(gameDisplay, colour, [ship_X, ship_Y + shipSize, shipSize * hp / 100, 5])
         else:
             pygame.mixer.Sound.play(explode_sound)
 
