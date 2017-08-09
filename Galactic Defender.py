@@ -475,8 +475,7 @@ def gameLoop():
             if collide (enemy.x, enemy.y, enemy.width, enemy.height, ship_X, ship_Y, shipSize, shipSize):
                 hp = hp - 25
                 streak = 1
-                score = score - 20
-                print (score)
+                # print (score)
                 enemies.remove(enemy)
                 pygame.mixer.Sound.play(explode_sound)
                 gone = True
@@ -540,9 +539,8 @@ def gameLoop():
                         else:
                             pygame.mixer.Sound.play(hit_sound)
                             score = score + 2 * streak
-                        streak = streak + 1
-                            
-                        print (score)
+                        streak = streak + 1   
+                        # print (score)
                         
                 for boss in bosses:
                     if collide (shell.x, shell.y, shell.width, shell.height, boss.x, boss.y, boss.width, boss.height) and not hit:
@@ -560,7 +558,7 @@ def gameLoop():
                             score = score + 2 * streak
                         streak = streak + 1
                     
-                        print (score)
+                       # print (score)
                     
                             
                 for item in pwrups:
@@ -598,7 +596,7 @@ def gameLoop():
                                                             
                         pwrups.remove(item)
                         score = score + 15 * streak
-                        print (score)
+                        # print (score)
                         
                        
                 if not hit:        
@@ -613,10 +611,7 @@ def gameLoop():
             shell.draw(gameDisplay)
 
         for shell in enemyFire:
-         #   hit = False
-         #   gone = True
             shell.move()
-            #shell.draw(gameDisplay)
 
             if shell.y >= HEIGHT:                
                 enemyFire.remove(shell)
@@ -631,8 +626,7 @@ def gameLoop():
                     hp = hp - shell.damage
                     pygame.mixer.Sound.play(hit_sound)
                     streak = 1
-                    score = score - 5
-                    print (score)
+                    # print (score)
 
                     
         for shell in enemyFire:
@@ -685,9 +679,7 @@ def gameLoop():
                     pygame.display.update()
                     
                 #---------------------------------
-
-
-                            
+        
             if event.type == POWERUP_TIME:
                 chance = random.randrange(0,3)
                 if chance == 0:
@@ -738,7 +730,8 @@ def gameLoop():
                 
         else:
             ship_dx = 10
-            
+
+        msg_to_screen("Score: " + str(score), white, 60, 20)
         pygame.display.update()
         clock.tick(FPS)
 
