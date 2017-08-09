@@ -164,6 +164,7 @@ shipSize = 40
 bulletSize = 10
 enemySize = 20
 enemies = []
+update = True
 
 clock = pygame.time.Clock()
 shoot_sound = pygame.mixer.Sound("shoot.wav")
@@ -195,8 +196,9 @@ BOSSATTACK_TIME = 8000
 POWERUP_TIME, t = pygame.USEREVENT + 1,5000
 SPAWNRATE_TIME, spawnTime = pygame.USEREVENT + 2,30000
 
-font = pygame.font.SysFont(None, 25)
-
+small_font = pygame.font.SysFont(None, 25)
+medium_font = pygame.font.SysFont(None, 40)
+large_font = pygame.font.SysFont(None, 60)
 
 # Collision detector
 def collide (x1, y1, l1, w1, x2, y2, l2, w2):
@@ -207,13 +209,15 @@ def collide (x1, y1, l1, w1, x2, y2, l2, w2):
     else:
         return False
 
-def text_objects(text, colour):
-    textSurface = font.render(text, True, colour)
+def text_objects(text, colour, size):
+    #textSurface = small_font.render(text, True, colour)
+    textSurface = eval(size + "_font").render(text, True, colour)
     return textSurface, textSurface.get_rect()
     
-def msg_to_screen (msg, colour, posX, posY):
-    textSurf, textRect = text_objects(msg, colour)
-    textRect.center = posX, posY
+def msg_to_screen (msg, colour, posX, posY, anchor = "center", size = "small"):
+    textSurf, textRect = text_objects(msg, colour, size)
+    setattr(textRect, anchor, (posX, posY))
+    #textRect.center = posX, posY
     gameDisplay.blit (textSurf, textRect)
 
 def spawn_enemies(amount, up, down, left, right):
@@ -254,6 +258,7 @@ def game_intro():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    pygame.mixer.Sound.play(pwrup_sound)
                     intro = False
 
                 if event.key == pygame.K_q:
@@ -261,10 +266,11 @@ def game_intro():
                     quit()
 
         gameDisplay.fill(white)
-        msg_to_screen("Welcome to Galactic Defender!", blue, WIDTH/2, HEIGHT/2)
-        msg_to_screen("Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20)
+        gameDisplay.blit(bg, (0, 0))
+        msg_to_screen("Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
+        msg_to_screen("Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
         pygame.display.update()
-        clock.tick(10)
+        clock.tick(8)
 
 
 # Gameloop
@@ -273,6 +279,7 @@ def gameLoop():
     global gameOver
     global enemyFire
     global shield
+    global update
 
     score = 0
     streak = 1
@@ -293,7 +300,6 @@ def gameLoop():
     spawnCount = 10
     SHOT_DELAY = 250
     drop = False
-    update = True
     spawn = True
     specialLaser = False
     bossActive = False
@@ -321,9 +327,11 @@ def gameLoop():
         while gameOver:
             if update:
                 pygame.mixer.music.stop()
-                msg_to_screen("Game over, press C to play again or Q to quit.", white, WIDTH / 2, HEIGHT / 2)
-                    
-                msg_to_screen("Your score is: " + str(score), blue, WIDTH / 2, HEIGHT / 2 + 40)
+                msg_to_screen("Game over!", red, WIDTH / 2, HEIGHT / 2 - 40, size = "large") 
+                msg_to_screen("Your score is: " + str(score), blue, WIDTH / 2, HEIGHT / 2, size = "medium")
+                
+                msg_to_screen("Press C to play again", white, WIDTH / 2, HEIGHT / 2 + 100, size = "small")
+                msg_to_screen("Press Q to quit", white, WIDTH / 2, HEIGHT / 2 + 130, size = "small")
                 update = False
                             
             pygame.display.update()
@@ -369,14 +377,10 @@ def gameLoop():
                     if event.key == pygame.K_p:
                         pause = False
                         pygame.mixer.music.unpause()
-                        
-
-
-            
+                          
         # In game--------------------------
         keys = pygame.key.get_pressed()
         gameDisplay.fill(black)
-
 
         rel_bg_y = bg_y % bg.get_rect().height
         gameDisplay.blit(bg, (0, rel_bg_y - bg.get_rect().height))
@@ -586,7 +590,7 @@ def gameLoop():
                                     dmg = 10
                                 fire.append(Bullet(randX, ship_Y, dmg))
                         elif item.hp == -4:                            
-                            specialBullet = max(40, spawnCount)
+                            specialBullet += 40
                             specialLaser = True
 
                         elif item.hp == -5:
@@ -662,7 +666,7 @@ def gameLoop():
                 if event.key == pygame.K_3:
                     randX = random.randrange(0, WIDTH - enemySize)
                     randY = random.randrange(0, 1/4 * HEIGHT)
-                    pwrups.append(Ship(randX, randY, enemySize, enemySize, -3))
+                    pwrups.append(Ship(randX, randY, enemySize, enemySize, -random.randrange(1, 6)))
                     
                 if event.key == pygame.K_4:
                     shield = True
@@ -675,7 +679,7 @@ def gameLoop():
                 if event.key == pygame.K_p:
                     pause = True
                     pygame.mixer.music.pause()
-                    msg_to_screen("Paused, press 'P' to continue" , white, WIDTH / 2, HEIGHT / 2 + 40)
+                    msg_to_screen("Paused, press 'P' to continue" , white, WIDTH / 2, HEIGHT / 2, size = "medium")
                     pygame.display.update()
                     
                 #---------------------------------
@@ -731,7 +735,9 @@ def gameLoop():
         else:
             ship_dx = 10
 
-        msg_to_screen("Score: " + str(score), white, 60, 20)
+        msg_to_screen("Score: " + str(score), white, 10, 10, "topleft")
+        if specialLaser:
+            msg_to_screen("Special Laser: " + str(specialBullet), white, WIDTH - 10, 10, "topright")
         pygame.display.update()
         clock.tick(FPS)
 
