@@ -491,7 +491,7 @@ def gameLoop():
         if len(bosses) == 0:
             bossActive = False
             if len(enemies) <= 10:
-                enemies.extend(spawn_enemies (5, -1/4 * HEIGHT, 0, 0, WIDTH))
+                enemies.extend(spawn_enemies (5, -1/3 * HEIGHT, -1/10 * HEIGHT, 0, WIDTH))
             
         else:
             bossActive = True
@@ -662,7 +662,7 @@ def gameLoop():
                 if event.key == pygame.K_1:
                     hp = 100
                 if event.key == pygame.K_2:
-                    enemyList = []
+                    enemies = []
                 if event.key == pygame.K_3:
                     randX = random.randrange(0, WIDTH - enemySize)
                     randY = random.randrange(0, 1/4 * HEIGHT)
@@ -674,7 +674,7 @@ def gameLoop():
                     shieldColour = white
 
                 if event.key == pygame.K_0:
-                    enemies.extend(spawn_enemies (5, -1/4 * HEIGHT, 0, 0, WIDTH))
+                    enemies.extend(spawn_enemies (5, -1/3 * HEIGHT, -1/10 * HEIGHT, 0, WIDTH))
 
                 if event.key == pygame.K_p:
                     pause = True
