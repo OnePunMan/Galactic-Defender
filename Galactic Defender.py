@@ -1,204 +1,29 @@
 # Author: Jackie Xu
 # Date: 11/16/2016
 # Content: My second game using pygame (Galactic Defender)
-import pygame
-import random
+#import pygame
+#import random
 import math
 import time
+from properties import *
+from classes import *
 
-pygame.mixer.pre_init(44100, -16, 2, 2048)
-pygame.mixer.init()
 pygame.init()
 
-# colours: RGB
-white = (255, 255, 255)
-black = (0, 0, 0)
-cyan = (20, 220, 220)
-pink = (255, 0, 255)
-red = (255, 0, 0)
-purple = (100, 0, 100)
-orange = (255, 153, 51)
-green = (0, 155, 0)
-blue = (0, 0, 255)
-yellow = (255, 255, 0)
-
-      
-class Bullet:
-
-    def __init__(self, x, y, damage, dx = 0, dy = 10, colour = yellow, width = 10, height = 20):
-        self.bullets = []
-        self.damage = damage
-        self.x = x
-        self.y = y
-        self.dx = dx
-        self.dy = dy
-        self.width = width
-        self.height = height
-        self.colour = colour
-
-    def draw (self, surface):
-        pygame.draw.rect(surface, self.colour, [self.x, self.y, self.width, self.height])
-        
-    def allyClr (self):
-        if self.damage == 10:
-            self.colour = yellow
-        else:
-            self.colour = pink
-
-    def move (self):
-        self.x = self.x + self.dx
-        self.y = self.y + self.dy
-
-class Ship:
-    
-    def __init__(self, x, y, width, height, hp, dx = 0, dy = 0):
-        self.x = x
-        self.y = y
-        self.dx = dx
-        self.dy = dy
-        self.width = width
-        self.height = height
-        self.hp = hp
-        self.attackTime = 100 * random.randrange(10, 41)
-        self.time = pygame.time.get_ticks()
-        self.update()
-
-        if self.hp <= -1:
-            if self.hp == -1:
-                self.img = medpack
-            elif self.hp == -2:
-                self.img = boostUp
-            elif self.hp == -3:
-                self.img = barrage
-            elif self.hp == -4:
-                self.img = purpleLaser
-            else:
-                self.img = None
-
-    
-    def move(self):
-        if self.x + self.dx <= 0 or self.x + self.width + self.dx >= WIDTH:
-            self.dx = -self.dx
-        self.x = self.x + self.dx
-        self.y = self.y + self.dy
-
-    def draw(self, surface):
-        pygame.draw.rect(surface, self.colour, [self.x, self.y, self.width, self.height])
-
-
-    def update (self):
-        if self.hp <= -1:
-            self.colour = white
-        elif self.hp == 10:
-            self.colour = red
-        elif self.hp == 20:
-            self.colour = orange
-        else:
-            self.colour = purple
-
-class BigShip:
-    
-    def __init__(self, x, y, dx = 5, dy = 0, width = 60, height = 40, hp = 100):
-        self.x = x
-        self.y = y
-        self.dx = dx
-        self.dy = dy 
-        self.width = width
-        self.height = height
-        self.hp = hp
-        self.totalHP = hp
-        self.colour = red
-        self.special = False
-        self.time = pygame.time.get_ticks()
-
-    
-    def draw (self, surface):
-        if self.hp > 0:
-            pygame.draw.rect(surface, self.colour, [self.x, self.y, self.width, self.height])
-            pygame.draw.rect(surface, black, [self.x, self.y + 0.9 * self.height, self.width, 0.1 * self.height])
-            pygame.draw.rect(surface, green, [self.x, self.y + 0.9 * self.height, self.hp / self.totalHP * self.width, 0.1 * self.height])
-
-        else:
-            pygame.draw.rect(surface, black, [self.x, self.y + 0.9 * self.height, self.width, 0.1 * self.height])
-      
-         
-    def attack (self):
-        tpe = random.randrange(1,3)
-        
-        if tpe == 1:        
-            for count in range(-10, 11):
-                enemyFire.append(Bullet(self.x + self.width/2 - 10/2, self.y + self.height, 10, count, 5, yellow, 10, 10))
-        else:
-            self.special = True
-            self.time = pygame.time.get_ticks()
-            self.laser = Bullet(self.x + 1/4 * self.width, self.y + self.height, 4, 0, 0, cyan, 1/2 * self.width, 0)
-            
-    def specialAttack (self):
-        if self.special:
-            self.laser.x = self.x + 1/4 * self.width
-            if shield:
-                shieldHeight = 3/4 * HEIGHT - self.laser.y
-            else:
-                shieldHeight = HEIGHT
-            self.laser.height = min(self.laser.height + 20, HEIGHT, shieldHeight)
-            self.laser.draw(gameDisplay)
-            
-            if pygame.time.get_ticks() - self.time > LASER_TIME:
-                self.special = False
-    
-
-    def move(self, margin = 100):
-        if self.x + self.dx <= 0 - margin or self.x + self.width + self.dx >= WIDTH + margin:
-            self.dx = -self.dx
-        self.x = self.x + self.dx
-        self.y = self.y + self.dy
-
-    def hit(self, damage):
-        self.hp = self.hp - damage
-                
-
-WIDTH = 800
-HEIGHT  = 600
-
-shipSize = 40
-bulletSize = 10
-enemySize = 20
+# local variables
 enemies = []
+enemyFire = []
+shield = False
 update = True
-
 clock = pygame.time.Clock()
-shoot_sound = pygame.mixer.Sound("shoot.wav")
-hit_sound = pygame.mixer.Sound("hit.wav")
-explode_sound = pygame.mixer.Sound("explode.wav")
-pwrup_sound = pygame.mixer.Sound("pwrup.wav")
-
-pygame.mixer.music.load("bg.wav")
-
-medpack = pygame.image.load('health.png')
-boostUp = pygame.image.load('up.png')
-barrage = pygame.image.load('barrage.png')
-purpleLaser = pygame.image.load('purple.png')
-playerShip = pygame.image.load('ship_new.png')
-bg = pygame.image.load('space.png') # .convert()
-
 
 #S Surface (Display of the game)
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Galactic Defender')
 
-# CONSTANTS
-FPS = 30
-FALL_TIME = 3000
-LASER_TIME = 5000
-SHIELD_TIME = 10000
-BOSSATTACK_TIME = 8000
+powerup_time, t = pygame.USEREVENT + 1,5000
+spawnrate_time, spawnTime = pygame.USEREVENT + 2,30000
 
-POWERUP_TIME, t = pygame.USEREVENT + 1,5000
-SPAWNRATE_TIME, spawnTime = pygame.USEREVENT + 2,30000
-
-small_font = pygame.font.SysFont(None, 25)
-medium_font = pygame.font.SysFont(None, 40)
-large_font = pygame.font.SysFont(None, 60)
 
 # Collision detector
 def collide (x1, y1, l1, w1, x2, y2, l2, w2):
@@ -319,8 +144,8 @@ def gameLoop():
     
     pygame.mixer.music.play(-1)
     #PWR UP SPAWN TIME
-    pygame.time.set_timer(POWERUP_TIME, t)
-    pygame.time.set_timer(SPAWNRATE_TIME, spawnTime)
+    pygame.time.set_timer(powerup_time, t)
+    pygame.time.set_timer(spawnrate_time, spawnTime)
     
     while not gameExit:
 
@@ -543,7 +368,7 @@ def gameLoop():
                         else:
                             pygame.mixer.Sound.play(hit_sound)
                             score = score + 2 * streak
-                        streak = streak + 1   
+                        streak = max(streak + 1, 100)
                         # print (score)
                         
                 for boss in bosses:
@@ -684,14 +509,14 @@ def gameLoop():
                     
                 #---------------------------------
         
-            if event.type == POWERUP_TIME:
+            if event.type == powerup_time:
                 chance = random.randrange(0,3)
                 if chance == 0:
                     chance = -1 * random.randrange(1,6)
                     randX = random.randrange(0, WIDTH - enemySize)
                     randY = random.randrange(0, 1/4 * HEIGHT)
                     pwrups.append(Ship(randX, randY, enemySize, enemySize, chance))
-            if event.type == SPAWNRATE_TIME and bossActive == False:
+            if event.type == spawnrate_time and bossActive == False:
                 enemies.extend(spawn_enemies (spawnCount, -1/4 * HEIGHT, 0, 0, WIDTH))
                 direction = random.randrange(0,2)
                 if direction == 0:
