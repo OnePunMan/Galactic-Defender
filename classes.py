@@ -1,6 +1,24 @@
 #import pygame
 import random
 from properties import *
+
+def text_objects(text, colour, size):
+    #textSurface = small_font.render(text, True, colour)
+    textSurface = eval(size + "_font").render(text, True, colour)
+    return textSurface, textSurface.get_rect()
+
+
+def text_to_button(display, text, colour, x, y, width, height, size = "small"):
+    textSurf, textRect = text_objects(text, colour, size)
+    textRect.center = (x + width/2, y + height/2)
+    display.blit (textSurf, textRect)
+
+def msg_to_screen (display, msg, colour, posX, posY, anchor = "center", size = "small"):
+    textSurf, textRect = text_objects(msg, colour, size)
+    setattr(textRect, anchor, (posX, posY))
+    #textRect.center = posX, posY
+    display.blit (textSurf, textRect)
+
 class Bullet:
 
     def __init__(self, x, y, damage, dx = 0, dy = 10, colour = (255, 255, 0), width = 10, height = 20):
@@ -99,18 +117,18 @@ class BigShip:
             pygame.draw.rect(surface, black, [self.x, self.y + 0.9 * self.height, self.width, 0.1 * self.height])
       
          
-    def attack (self):
+    def attack (self, enemy_list):
         tpe = random.randrange(1,3)
         
         if tpe == 1:        
             for count in range(-10, 11):
-                enemyFire.append(Bullet(self.x + self.width/2 - 10/2, self.y + self.height, 10, count, 5, yellow, 10, 10))
+                enemy_list.append(Bullet(self.x + self.width/2 - 10/2, self.y + self.height, 10, count, 5, yellow, 10, 10))
         else:
             self.special = True
             self.time = pygame.time.get_ticks()
             self.laser = Bullet(self.x + 1/4 * self.width, self.y + self.height, 4, 0, 0, cyan, 1/2 * self.width, 0)
             
-    def specialAttack (self):
+    def specialAttack (self, display, shield):
         if self.special:
             self.laser.x = self.x + 1/4 * self.width
             if shield:
@@ -118,7 +136,7 @@ class BigShip:
             else:
                 shieldHeight = HEIGHT
             self.laser.height = min(self.laser.height + 20, HEIGHT, shieldHeight)
-            self.laser.draw(gameDisplay)
+            self.laser.draw(display)
             
             if pygame.time.get_ticks() - self.time > LASER_TIME:
                 self.special = False
@@ -131,3 +149,17 @@ class BigShip:
 
     def hit(self, damage):
         self.hp = self.hp - damage
+
+
+class Button:
+    def __init__(self, width, height, text, colour, font, on_click):
+        self.width = width
+        self.height = height
+        self.text = text
+        self.colour = colour
+        self.font = font
+        self.on_click = on_click
+
+    def draw(self, display, x, y, anchor = None):
+        pygame.draw.rect(display, self.colour, (x, y, self.width, self.height))
+        text_to_button(display, self.text, (255,255,255), x, y, self.width, self.height)

@@ -1,3 +1,5 @@
 *.psd
+*.pyc
+__pycache__
 ship_org.png
 space.jpg

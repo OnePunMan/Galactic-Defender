@@ -17,6 +17,10 @@ shield = False
 update = True
 clock = pygame.time.Clock()
 
+# UI stuff
+start_button = Button(200, 30, "Start", green, small_font, lambda: False)
+quit_button = Button(200, 30, "Quit", red, small_font, lambda: False)
+
 #S Surface (Display of the game)
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Galactic Defender')
@@ -34,16 +38,6 @@ def collide (x1, y1, l1, w1, x2, y2, l2, w2):
     else:
         return False
 
-def text_objects(text, colour, size):
-    #textSurface = small_font.render(text, True, colour)
-    textSurface = eval(size + "_font").render(text, True, colour)
-    return textSurface, textSurface.get_rect()
-    
-def msg_to_screen (msg, colour, posX, posY, anchor = "center", size = "small"):
-    textSurf, textRect = text_objects(msg, colour, size)
-    setattr(textRect, anchor, (posX, posY))
-    #textRect.center = posX, posY
-    gameDisplay.blit (textSurf, textRect)
 
 def spawn_enemies(amount, up, down, left, right):
     enemyList = []
@@ -92,10 +86,14 @@ def game_intro():
 
         gameDisplay.fill(white)
         gameDisplay.blit(bg, (0, 0))
-        msg_to_screen("Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
-        msg_to_screen("Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
+        msg_to_screen(gameDisplay, "Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
+        msg_to_screen(gameDisplay, "Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
+        
+        start_button.draw(gameDisplay, WIDTH / 3, HEIGHT * 2./3)
+        quit_button.draw(gameDisplay, WIDTH * 2./ 3, HEIGHT * 2./3)
+        
         pygame.display.update()
-        clock.tick(8)
+        clock.tick(FPS)
 
 
 # Gameloop
@@ -152,11 +150,11 @@ def gameLoop():
         while gameOver:
             if update:
                 pygame.mixer.music.stop()
-                msg_to_screen("Game over!", red, WIDTH / 2, HEIGHT / 2 - 40, size = "large") 
-                msg_to_screen("Your score is: " + str(score), blue, WIDTH / 2, HEIGHT / 2, size = "medium")
+                msg_to_screen(gameDisplay, "Game over!", red, WIDTH / 2, HEIGHT / 2 - 40, size = "large") 
+                msg_to_screen(gameDisplay, "Your score is: " + str(score), blue, WIDTH / 2, HEIGHT / 2, size = "medium")
                 
-                msg_to_screen("Press C to play again", white, WIDTH / 2, HEIGHT / 2 + 100, size = "small")
-                msg_to_screen("Press Q to quit", white, WIDTH / 2, HEIGHT / 2 + 130, size = "small")
+                msg_to_screen(gameDisplay, "Press C to play again", white, WIDTH / 2, HEIGHT / 2 + 100, size = "small")
+                msg_to_screen(gameDisplay, "Press Q to quit", white, WIDTH / 2, HEIGHT / 2 + 130, size = "small")
                 update = False
                             
             pygame.display.update()
@@ -326,13 +324,13 @@ def gameLoop():
                 boss.draw(gameDisplay)
                 
                 if boss.special:
-                    boss.specialAttack()
+                    boss.specialAttack(gameDisplay, shield)
                     if collide (boss.laser.x, boss.laser.y, boss.laser.width,boss.laser.height, ship_X, ship_Y, shipSize, shipSize):
                         hp = hp - boss.laser.damage
                         
                 if now - boss.time > BOSSATTACK_TIME:
                     boss.time = now
-                    boss.attack()
+                    boss.attack(enemyFire)
 
                     
         for item in pwrups:
@@ -368,7 +366,7 @@ def gameLoop():
                         else:
                             pygame.mixer.Sound.play(hit_sound)
                             score = score + 2 * streak
-                        streak = max(streak + 1, 100)
+                        streak = min(streak + 1, 100)
                         # print (score)
                         
                 for boss in bosses:
@@ -504,7 +502,7 @@ def gameLoop():
                 if event.key == pygame.K_p:
                     pause = True
                     pygame.mixer.music.pause()
-                    msg_to_screen("Paused, press 'P' to continue" , white, WIDTH / 2, HEIGHT / 2, size = "medium")
+                    msg_to_screen(gameDisplay, "Paused, press 'P' to continue" , white, WIDTH / 2, HEIGHT / 2, size = "medium")
                     pygame.display.update()
                     
                 #---------------------------------
@@ -560,9 +558,9 @@ def gameLoop():
         else:
             ship_dx = 10
 
-        msg_to_screen("Score: " + str(score), white, 10, 10, "topleft")
+        msg_to_screen(gameDisplay, "Score: " + str(score), white, 10, 10, "topleft")
         if specialLaser:
-            msg_to_screen("Special Laser: " + str(specialBullet), white, WIDTH - 10, 10, "topright")
+            msg_to_screen(gameDisplay, "Special Laser: " + str(specialBullet), white, WIDTH - 10, 10, "topright")
         pygame.display.update()
         clock.tick(FPS)
 
