@@ -18,8 +18,8 @@ update = True
 clock = pygame.time.Clock()
 
 # UI stuff
-start_button = Button(200, 30, "Start", green, small_font, lambda: False)
-quit_button = Button(200, 30, "Quit", red, small_font, lambda: False)
+start_button = Button(WIDTH / 3, HEIGHT * 2./3, 200, 30, "Start", green, small_font, lambda: False)
+quit_button = Button(WIDTH * 2./3, HEIGHT * 2./3, 200, 30, "Quit", red, small_font, lambda: False)
 
 #S Surface (Display of the game)
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -70,6 +70,8 @@ def spawn_boss(surface, hp = 100, up = 0, down = 0, left = 0, right = 0):
 def game_intro():
     intro = True
     while intro:
+        cursor = pygame.mouse.get_pos()
+        #print(cursor)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -84,13 +86,15 @@ def game_intro():
                     pygame.quit()
                     quit()
 
+
         gameDisplay.fill(white)
         gameDisplay.blit(bg, (0, 0))
+
         msg_to_screen(gameDisplay, "Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
         msg_to_screen(gameDisplay, "Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
         
-        start_button.draw(gameDisplay, WIDTH / 3, HEIGHT * 2./3)
-        quit_button.draw(gameDisplay, WIDTH * 2./ 3, HEIGHT * 2./3)
+        start_button.draw(gameDisplay, start_button.is_hover(cursor))
+        quit_button.draw(gameDisplay, quit_button.is_hover(cursor))
         
         pygame.display.update()
         clock.tick(FPS)
