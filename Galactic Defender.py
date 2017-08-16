@@ -18,8 +18,11 @@ update = True
 clock = pygame.time.Clock()
 
 # UI stuff
-start_button = Button(WIDTH / 3, HEIGHT * 2./3, 200, 30, "Start", green, small_font, lambda: False)
-quit_button = Button(WIDTH * 2./3, HEIGHT * 2./3, 200, 30, "Quit", red, small_font, lambda: False)
+start_button = Button((WIDTH / 3 - 200)/2, HEIGHT * 2./3, 200, 30, "Start", green, small_font, lambda: False)
+help_button = Button(WIDTH / 3 + (WIDTH / 3 - 200)/2, HEIGHT * 2./3, 200, 30, "Help", blue, small_font, lambda: False)
+quit_button = Button(WIDTH * 2./3 + (WIDTH / 3 - 200)/2, HEIGHT * 2./3, 200, 30, "Quit", red, small_font, lambda: False)
+
+button_list = [start_button, help_button, quit_button]
 
 #S Surface (Display of the game)
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -70,8 +73,18 @@ def spawn_boss(surface, hp = 100, up = 0, down = 0, left = 0, right = 0):
 def game_intro():
     intro = True
     while intro:
+        # mouse detection
         cursor = pygame.mouse.get_pos()
-        #print(cursor)
+        clicked = pygame.mouse.get_pressed()
+
+        if clicked[0] and start_button.is_hover(cursor):
+            pygame.mixer.Sound.play(pwrup_sound)
+            intro = False
+
+        elif clicked[0] and quit_button.is_hover(cursor):
+            pygame.quit()
+            quit()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -86,15 +99,21 @@ def game_intro():
                     pygame.quit()
                     quit()
 
-
         gameDisplay.fill(white)
         gameDisplay.blit(bg, (0, 0))
 
         msg_to_screen(gameDisplay, "Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
-        msg_to_screen(gameDisplay, "Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
+        #msg_to_screen(gameDisplay, "Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
         
-        start_button.draw(gameDisplay, start_button.is_hover(cursor))
-        quit_button.draw(gameDisplay, quit_button.is_hover(cursor))
+        for button in button_list:
+            hover = button.is_hover(cursor)
+            if hover:
+                #pygame.mixer.Sound.play(pwrup_sound)
+                pass
+            button.draw(gameDisplay, hover)
+        # start_button.draw(gameDisplay, start_button.is_hover(cursor))
+        # help_button.draw(gameDisplay, help_button.is_hover(cursor))
+        # quit_button.draw(gameDisplay, quit_button.is_hover(cursor))
         
         pygame.display.update()
         clock.tick(FPS)

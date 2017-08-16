@@ -147,7 +147,7 @@ class BigShip:
 
 class Button:
     # class (static) method
-    def text_to_button(display, text, colour, x, y, width, height, size = "small"):
+    def text_to_button(display, text, colour, x, y, width, height, size = "small", anchor = "center"):
         textSurf, textRect = text_objects(text, colour, size)
         textRect.center = (x + width/2, y + height/2)
         display.blit (textSurf, textRect)
@@ -165,10 +165,10 @@ class Button:
     def is_hover(self, mouse_pos):
         return self.x <= mouse_pos[0] <= self.x + self.width and self.y <= mouse_pos[1] <= self.y + self.height
 
-    def draw(self, display, hover = False, anchor = None):
+    def draw(self, display, hover = False):
         clr = self.colour
         if hover:
-            clr = (min(255, self.colour[0] + 30), min(255, self.colour[1] + 30), min(255, self.colour[2] + 30))
+            clr = (min(255, self.colour[0] + 50), min(255, self.colour[1] + 50), min(255, self.colour[2] + 50))
 
         pygame.draw.rect(display, clr, (self.x, self.y, self.width, self.height))
         Button.text_to_button(display, self.text, (255,255,255), self.x, self.y, self.width, self.height)
