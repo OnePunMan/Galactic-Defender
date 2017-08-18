@@ -1,8 +1,6 @@
 # Author: Jackie Xu
 # Date: 11/16/2016
 # Content: My second game using pygame (Galactic Defender)
-#import pygame
-#import random
 import math
 import time
 from properties import *
@@ -156,7 +154,6 @@ def gameLoop():
     shieldColour = white
     bg_y = 0
     scroll_speed = 1
-    
 
     gameExit = False
     gameOver = False
@@ -267,7 +264,6 @@ def gameLoop():
             elif spawnCount >= 30:
                 SHOT_DELAY = 240
                 
-
         if shield:
             pygame.draw.rect(gameDisplay, shieldColour, [0, 3/4 * HEIGHT, WIDTH, 5])
             b = 255
@@ -276,7 +272,6 @@ def gameLoop():
             shieldColour = (c, c, c)
             if now - shieldTime > SHIELD_TIME:
                 shield = False
-    
                                              
         for enemy in enemies:
             enemy.move()
@@ -325,14 +320,12 @@ def gameLoop():
             if collide (enemy.x, enemy.y, enemy.width, enemy.height, ship_X, ship_Y, shipSize, shipSize):
                 hp = hp - 25
                 streak = 1
-                # print (score)
                 enemies.remove(enemy)
                 pygame.mixer.Sound.play(explode_sound)
                 gone = True
 
             if not gone:
                 enemy.draw(gameDisplay)
-            
             
         if len(bosses) == 0:
             bossActive = False
@@ -390,7 +383,6 @@ def gameLoop():
                             pygame.mixer.Sound.play(hit_sound)
                             score = score + 2 * streak
                         streak = min(streak + 1, 100)
-                        # print (score)
                         
                 for boss in bosses:
                     if collide (shell.x, shell.y, shell.width, shell.height, boss.x, boss.y, boss.width, boss.height) and not hit:
@@ -407,9 +399,6 @@ def gameLoop():
                             pygame.mixer.Sound.play(hit_sound)
                             score = score + 2 * streak
                         streak = streak + 1
-                    
-                       # print (score)
-                    
                             
                 for item in pwrups:
                     if collide (shell.x, shell.y, shell.width, shell.height, item.x, item.y, enemySize, enemySize) and not hit:
@@ -446,12 +435,10 @@ def gameLoop():
                                                             
                         pwrups.remove(item)
                         score = score + 15 * streak
-                        # print (score)
                         
                        
                 if not hit:        
                     shell.y = shell.y + shell_dy
-                    #shell.draw(gameDisplay)
                 
             else:
                 del fire[0]
@@ -476,7 +463,6 @@ def gameLoop():
                     hp = hp - shell.damage
                     pygame.mixer.Sound.play(hit_sound)
                     streak = 1
-                    # print (score)
 
                     
         for shell in enemyFire:
@@ -494,7 +480,6 @@ def gameLoop():
             pygame.draw.rect(gameDisplay, colour, [ship_X, ship_Y + shipSize, shipSize * hp / 100, 5])
         else:
             pygame.mixer.Sound.play(explode_sound)
-
 
         for event in pygame.event.get():            
             if event.type == pygame.QUIT:
@@ -560,8 +545,6 @@ def gameLoop():
         if keys [pygame.K_RIGHT] and ship_X + shipSize + ship_dx <= WIDTH:
             ship_X = ship_X + ship_dx
             
-
-        
         if keys [pygame.K_SPACE] and not turbo:
             ship_dx = 5
             now = pygame.time.get_ticks()
