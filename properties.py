@@ -14,6 +14,8 @@ yellow = (255, 255, 0)
 # Window size
 WIDTH = 800
 HEIGHT  = 600
+GUTTER_W = 1/8 * WIDTH
+GUTTER_H = 1/4 * HEIGHT
 
 # CONSTANTS
 FPS = 30

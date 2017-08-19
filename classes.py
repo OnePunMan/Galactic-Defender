@@ -147,6 +147,7 @@ class BigShip:
 
 class Button:
     # class (static) method
+    @staticmethod
     def text_to_button(display, text, colour, x, y, width, height, size = "small", anchor = "center"):
         textSurf, textRect = text_objects(text, colour, size)
         textRect.center = (x + width/2, y + height/2)
