@@ -105,7 +105,7 @@ class BigShip:
         if self.hp > 0:
             pygame.draw.rect(surface, self.colour, [self.x, self.y, self.width, self.height])
             pygame.draw.rect(surface, black, [self.x, self.y + 0.9 * self.height, self.width, 0.1 * self.height])
-            pygame.draw.rect(surface, green, [self.x, self.y + 0.9 * self.height, self.hp / self.totalHP * self.width, 0.1 * self.height])
+            pygame.draw.rect(surface, green, [self.x, self.y + 0.9 * self.height, float(self.hp) / self.totalHP * self.width, 0.1 * self.height])
 
         else:
             pygame.draw.rect(surface, black, [self.x, self.y + 0.9 * self.height, self.width, 0.1 * self.height])
@@ -120,13 +120,13 @@ class BigShip:
         else:
             self.special = True
             self.time = pygame.time.get_ticks()
-            self.laser = Bullet(self.x + 1/4 * self.width, self.y + self.height, 4, 0, 0, cyan, 1/2 * self.width, 0)
+            self.laser = Bullet(self.x + 1./4 * self.width, self.y + self.height, 4, 0, 0, cyan, 1./2 * self.width, 0)
             
     def specialAttack (self, display, shield):
         if self.special:
-            self.laser.x = self.x + 1/4 * self.width
+            self.laser.x = self.x + 1./4 * self.width
             if shield:
-                shieldHeight = 3/4 * HEIGHT - self.laser.y
+                shieldHeight = 3./4 * HEIGHT - self.laser.y
             else:
                 shieldHeight = HEIGHT
             self.laser.height = min(self.laser.height + 20, HEIGHT, shieldHeight)

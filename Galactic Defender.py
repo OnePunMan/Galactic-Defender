@@ -103,12 +103,12 @@ def game_intro():
         msg_to_screen(gameDisplay, "Welcome to Galactic Defender!", red, WIDTH/2, HEIGHT/2 - 40, size = "large")
         #msg_to_screen(gameDisplay, "Press 'Space' to start", blue, WIDTH/2, HEIGHT/2 + 20, size = "medium")
         
-        for button in button_list:
-            hover = button.is_hover(cursor)
-            if hover:
+       # for button in button_list:
+       #     hover = button.is_hover(cursor)
+       #     if hover:
                 #pygame.mixer.Sound.play(pwrup_sound)
-                pass
-            button.draw(gameDisplay, hover)
+       #         pass
+        #    button.draw(gameDisplay, hover)
         # start_button.draw(gameDisplay, start_button.is_hover(cursor))
         # help_button.draw(gameDisplay, help_button.is_hover(cursor))
         # quit_button.draw(gameDisplay, quit_button.is_hover(cursor))
@@ -158,7 +158,7 @@ def gameLoop():
     gameExit = False
     gameOver = False
 
-    enemies = spawn_enemies (spawnCount, -1/4 * HEIGHT, 1/4 * HEIGHT, 0, WIDTH)
+    enemies = spawn_enemies (spawnCount, -1./4 * HEIGHT, 1./4 * HEIGHT, 0, WIDTH)
     
     pygame.mixer.music.play(-1)
     #PWR UP SPAWN TIME
@@ -204,7 +204,7 @@ def gameLoop():
                         shield = False
                         pause = False
                         spawnCount = 5
-                        enemies = spawn_enemies (spawnCount, -1/4 * HEIGHT, 1/4 * HEIGHT, 0, WIDTH)
+                        enemies = spawn_enemies (spawnCount, -1./4 * HEIGHT, 1./4 * HEIGHT, 0, WIDTH)
                         enemyFire = []
                         score = 0
                         SHOT_DELAY = 250
@@ -265,9 +265,9 @@ def gameLoop():
                 SHOT_DELAY = 240
                 
         if shield:
-            pygame.draw.rect(gameDisplay, shieldColour, [0, 3/4 * HEIGHT, WIDTH, 5])
+            pygame.draw.rect(gameDisplay, shieldColour, [0, 3./4 * HEIGHT, WIDTH, 5])
             b = 255
-            m = -255 / SHIELD_TIME
+            m = -255. / SHIELD_TIME
             c = m * (now - shieldTime) + b
             shieldColour = (c, c, c)
             if now - shieldTime > SHIELD_TIME:
@@ -312,7 +312,7 @@ def gameLoop():
                                                       
                     enemyFire.append(Bullet(enemy.x + enemySize / 2 - bulletSize / 2, enemy.y, dmg, dx, dy, colour, l, w))
 
-            if shield and collide (enemy.x, enemy.y, enemy.width, enemy.height, 0, 3/4 * HEIGHT, WIDTH, 5):
+            if shield and collide (enemy.x, enemy.y, enemy.width, enemy.height, 0, 3./4 * HEIGHT, WIDTH, 5):
                 pygame.mixer.Sound.play(explode_sound)
                 enemies.remove(enemy)
                 gone = True                
@@ -330,7 +330,7 @@ def gameLoop():
         if len(bosses) == 0:
             bossActive = False
             if len(enemies) <= 10:
-                enemies.extend(spawn_enemies (5, -1/3 * HEIGHT, -1/10 * HEIGHT, 0, WIDTH))
+                enemies.extend(spawn_enemies (5, -1./3 * HEIGHT, -1./10 * HEIGHT, 0, WIDTH))
             
         else:
             bossActive = True
@@ -366,7 +366,7 @@ def gameLoop():
             if specialBullet <= 0:
                 specialLaser = False
     
-            if shell.y - bulletSize >= -1/4 * HEIGHT:
+            if shell.y - bulletSize >= -1./4 * HEIGHT:
                 for enemy in enemies:
                     if collide (shell.x, shell.y, shell.width, shell.height, enemy.x, enemy.y, enemy.width, enemy.height) and not hit:
                         
@@ -455,7 +455,7 @@ def gameLoop():
             
             else:
                 gone = False
-                if shield and collide (shell.x, shell.y, shell.width, shell.height, 0, 3/4 * HEIGHT, WIDTH, 5):
+                if shield and collide (shell.x, shell.y, shell.width, shell.height, 0, 3./4 * HEIGHT, WIDTH, 5):
                     enemyFire.remove(shell)
                     
                 if collide (shell.x, shell.y, shell.width, shell.height, ship_X, ship_Y, shipSize, shipSize):
@@ -496,7 +496,7 @@ def gameLoop():
                     enemies = []
                 if event.key == pygame.K_3:
                     randX = random.randrange(0, WIDTH - enemySize)
-                    randY = random.randrange(0, 1/4 * HEIGHT)
+                    randY = random.randrange(0, 1./4 * HEIGHT)
                     pwrups.append(Ship(randX, randY, enemySize, enemySize, -random.randrange(1, 6)))
                     
                 if event.key == pygame.K_4:
@@ -505,7 +505,7 @@ def gameLoop():
                     shieldColour = white
 
                 if event.key == pygame.K_0:
-                    enemies.extend(spawn_enemies (5, -1/3 * HEIGHT, -1/10 * HEIGHT, 0, WIDTH))
+                    enemies.extend(spawn_enemies (5, -1./3 * HEIGHT, -1./10 * HEIGHT, 0, WIDTH))
 
                 if event.key == pygame.K_p:
                     pause = True
@@ -520,10 +520,10 @@ def gameLoop():
                 if chance == 0:
                     chance = -1 * random.randrange(1,6)
                     randX = random.randrange(0, WIDTH - enemySize)
-                    randY = random.randrange(0, 1/4 * HEIGHT)
+                    randY = random.randrange(0, 1./4 * HEIGHT)
                     pwrups.append(Ship(randX, randY, enemySize, enemySize, chance))
             if event.type == spawnrate_time and bossActive == False:
-                enemies.extend(spawn_enemies (spawnCount, -1/4 * HEIGHT, 0, 0, WIDTH))
+                enemies.extend(spawn_enemies (spawnCount, -1./4 * HEIGHT, 0, 0, WIDTH))
                 direction = random.randrange(0,2)
                 if direction == 0:
                     direction = -100
