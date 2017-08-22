@@ -67,6 +67,27 @@ def spawn_boss(surface, hp = 100, up = 0, down = 0, left = 0, right = 0):
     boss = BigShip(-100, 10)
     return boss
 
+def help_screen():
+    _help = True
+    while _help:
+        keys = pygame.key.get_pressed()
+        gameDisplay.fill(black)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_b:
+                    pygame.mixer.Sound.play(pwrup_sound)
+                    _help = False
+
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        pygame.display.update()
+        clock.tick(FPS)
+
 # Game Intro
 def game_intro():
     intro = True
@@ -83,6 +104,9 @@ def game_intro():
         elif clicked[0] and quit_button.is_hover(cursor):
             pygame.quit()
             quit()
+
+        elif clicked[0] and help_button.is_hover(cursor):
+            help_screen()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -113,9 +137,6 @@ def game_intro():
             elif not hover:
                 button[1] = False
             button[0].draw(gameDisplay, hover)
-        #start_button.draw(gameDisplay, start_button.is_hover(cursor))
-        #help_button.draw(gameDisplay, help_button.is_hover(cursor))
-        #quit_button.draw(gameDisplay, quit_button.is_hover(cursor))
         
         pygame.display.update()
         clock.tick(FPS)
